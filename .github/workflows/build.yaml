@@ -48,11 +48,90 @@ jobs:
           cp hello_kivy-debug-0.1.apk pages_out/
           sudo apt update
           sudo apt install -y qrencode
-          echo '<!DOCTYPE html>' >pages_out/index.html
-          echo '<html><body><p><pre>' >pages_out/index.html
-          echo 'https://d.eadc0.de/hello-kivy/hello_kivy-debug-0.1.apk' | qrencode -o- -t UTF8i >> pages_out/index.html
-          echo "</pre></p><p><a href=\"https://d.eadc0.de/hello-kivy/hello_kivy-debug-0.1.apk\">hello_kivy-debug-0.1.apk</a></p>" >> pages_out/index.html
-          echo '</body></html>' >>pages_out/index.html
+          echo 'https://d.eadc0.de/hello-kivy/hello_kivy-debug-0.1.apk' | qrencode -o pages_out/qr.png -t PNG
+          cat > pages_out/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Download hello_kivy</title>
+              <style>
+                * {
+                  box-sizing: border-box;
+                }
+
+                body {
+                  margin: 0;
+                  min-height: 100vh;
+                  min-height: 100svh;
+                  padding: 1rem;
+                  background: #f3f5f8;
+                  color: #172033;
+                  font-family: system-ui, sans-serif;
+                }
+
+                main {
+                  width: min(100%, 32rem);
+                  margin: 0 auto;
+                  padding: 1.25rem;
+                  border-radius: 1rem;
+                  background: #fff;
+                  text-align: center;
+                  box-shadow: 0 0.5rem 2rem rgb(23 32 51 / 10%);
+                }
+
+                h1 {
+                  margin: 0 0 0.5rem;
+                  font-size: clamp(1.5rem, 6vw, 2rem);
+                }
+
+                p {
+                  margin: 0 0 1rem;
+                  line-height: 1.5;
+                }
+
+                img {
+                  display: block;
+                  width: min(100%, 20rem);
+                  max-height: 60svh;
+                  margin: 1rem auto;
+                  object-fit: contain;
+                }
+
+                a {
+                  display: inline-block;
+                  padding: 0.75rem 1rem;
+                  border-radius: 0.5rem;
+                  background: #1456c0;
+                  color: #fff;
+                  font-weight: 600;
+                  text-decoration: none;
+                }
+
+                a:focus-visible {
+                  outline: 3px solid #172033;
+                  outline-offset: 3px;
+                }
+
+                @media (orientation: landscape) {
+                  body {
+                    display: grid;
+                    place-items: center;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <main>
+                <h1>Download hello_kivy</h1>
+                <p>Scan the QR code or use the download link.</p>
+                <img src="qr.png" alt="QR code linking to the hello_kivy APK">
+                <a href="https://d.eadc0.de/hello-kivy/hello_kivy-debug-0.1.apk">Download APK</a>
+              </main>
+            </body>
+          </html>
+          EOF
 
       - name: Archive binary
         id: archive-binary
